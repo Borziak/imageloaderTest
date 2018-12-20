@@ -126,13 +126,13 @@ jQuery(document).ready(function ($) {
         previousCoordinates = {x: 0, y: 0};
         switch (route) {
             case 'clouds':
-                $('body').css('background', 'url("Tests/img/clouds.jpeg")');
+                $('body').css('background', 'url("Test2/img/clouds.jpeg")');
                 break;
             case 'sand':
-                $('body').css('background', 'url("Tests/img/sand.jpeg")');
+                $('body').css('background', 'url("Test2/img/sand.jpeg")');
                 break;
             case 'water':
-                $('body').css('background', 'url("Tests/img/water3.jpeg")');
+                $('body').css('background', 'url("Test2/img/water3.jpeg")');
                 break;
         }
         $(document).on('mousemove', function (event) {
@@ -177,7 +177,7 @@ jQuery(document).ready(function ($) {
             }),
                 previousCoordinates.x = mouseX,
                 previousCoordinates.y = mouseY) : (deleteListener(document, 'mousemove', mouseHandler),
-                scatterImages());
+                scatterImages(), navigateNext());
         }
     };
 
@@ -217,11 +217,13 @@ jQuery(document).ready(function ($) {
 
     function navigateNext() {
         if (currentRoute.indexOf(currentRoute[route + 1]) !== -1) {
+            console.log('current = ' + currentRoute[route] + ' | next = ' + currentRoute[route + 1]);
             Router.add(currentRoute[route + 1], loadAndAnimate(currentRoute[route + 1]));
             Router.navigate('/' + currentRoute[route + 1]);
             route++;
         } else {
             let newRoute = 0;
+            console.log('current = ' + currentRoute[route] + ' | next = ' + currentRoute[newRoute]);
             Router.add(currentRoute[newRoute], loadAndAnimate(currentRoute[newRoute]));
             Router.navigate('/' + currentRoute[newRoute]);
             route = 0;
@@ -312,13 +314,6 @@ jQuery(document).ready(function ($) {
                 });
             }, fps);
             scatteredImages++;
-            console.log(scatteredImages);
-            if (scatteredImages >= displayedImages.length - 1) {
-                let timer = setInterval(function () {
-                    navigateNext();
-                    clearInterval(timer);
-                }, 600);
-            }
         }
     }
 
