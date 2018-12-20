@@ -1,5 +1,6 @@
 body {
     overflow: hidden;
+    margin: 0;
 }
 
 .search_holder {
@@ -7,7 +8,9 @@ body {
 }
 
 .images_container {
-    display: none;
+    display: flex;
+    height: 100vh;
+    opacity: 1;
 }
 
 .preloader_count {

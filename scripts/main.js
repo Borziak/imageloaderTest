@@ -89,22 +89,14 @@ jQuery(document).ready(function ($) {
 // returning the user to the initial state
     Router.navigate();
 
-// adding routes
-//     Router
-//
-//         .add(/sand/, loadAndAnimate('sand'))
-//         .add(/water/, loadAndAnimate('water'))
-//         .add(function () {
-//             console.log('default');
-//         });
-        // .check('/clouds/').listen();
+    let route = getRandomInt(0, 2);
+    let currentRoute = ['clouds', 'sand', 'water'];
+
 
     let startDate = Date.now();
     let displayedImages = [];
     let wrappersArray = [];
     let previousCoordinates = {x: 0, y: 0};
-    let route = getRandomInt(0, 2);
-    let currentRoute = ['clouds', 'sand', 'water'];
     let uploadedPercent = 0;
     let errorsPercent = 0;
     let errorsNumber = 0;
@@ -113,6 +105,7 @@ jQuery(document).ready(function ($) {
     let totalNumber = 0;
     Router.add(currentRoute[route], loadAndAnimate(currentRoute[route]));
     Router.navigate('/' + currentRoute[route]);
+
     function loadAndAnimate(route) {
         console.log('At animate route = ' + route);
         displayedImages = [];
@@ -124,17 +117,12 @@ jQuery(document).ready(function ($) {
         imgCount = 0;
         totalNumber = 0;
         previousCoordinates = {x: 0, y: 0};
-        switch (route) {
-            case 'clouds':
-                $('body').css('background', 'url("Test2/img/clouds.jpeg")');
-                break;
-            case 'sand':
-                $('body').css('background', 'url("Test2/img/sand.jpeg")');
-                break;
-            case 'water':
-                $('body').css('background', 'url("Test2/img/water3.jpeg")');
-                break;
-        }
+        let container = $('.images_container');
+        container.animate({opacity: 0}, 700);
+        setTimeout(function(){
+            container.css('background', 'url("Test2/img/' + route + '.jpeg"')
+        }, 700);
+        container.animate({opacity: 1}, 800);
         $(document).on('mousemove', function (event) {
             let mouseX = event.pageX;
             let mouseY = event.pageY;
@@ -177,7 +165,7 @@ jQuery(document).ready(function ($) {
             }),
                 previousCoordinates.x = mouseX,
                 previousCoordinates.y = mouseY) : (deleteListener(document, 'mousemove', mouseHandler),
-                scatterImages(), navigateNext());
+                scatterImages());
         }
     };
 
@@ -231,7 +219,6 @@ jQuery(document).ready(function ($) {
     }
 
     function scatterImages() {
-        let scatteredImages = 0;
         for (let i = 0; i < displayedImages.length; i++) {
             let currentImage = $($(displayedImages)[i]),
                 windowWidth = $(window).outerWidth(),
@@ -258,7 +245,6 @@ jQuery(document).ready(function ($) {
             // console.log('horizontalAspect = ' + horizontalAspect);
             if (currentPositions.marks.topMark === 1) {
                 let verticalAspect = (windowHeight - currentPositions.offsets.top + currentImage.outerWidth() / 2) / proportion;
-                // console.log('verticalAspect = ' + verticalAspect);
                 if (horizontalAspect > verticalAspect - calculatePercent(verticalAspect, 5)) {
                     currentPositions.endpoints = {
                         vertical: windowHeight + 20,
@@ -294,27 +280,16 @@ jQuery(document).ready(function ($) {
                     };
                 }
             }
-            let imageQuantity = displayedImages.length;
-            let wholeTime = imageQuantity * 5;
-            let startTime = Date.now();
-            const fps = wholeTime / 6;
-            let timer = setInterval(function () {
-                let currentTime = Date.now() - startTime;
-                if (currentTime >= wholeTime) {
-                    clearInterval(timer);
-                    return;
-                }
                 $(currentImage).animate({
                     left: '' + currentPositions.endpoints.horizontal + 'px',
                     top: '' + currentPositions.endpoints.vertical + 'px'
                 }, {
                     easing: 'easeOutBounce',
                     queue: true,
-                    duration: 1200
+                    duration: 1500
                 });
-            }, fps);
-            scatteredImages++;
         }
+        setTimeout(navigateNext, 1200);
     }
 
     function roundDecimals(number, digitsQuantity, upgradeInteger, roundTrigger) {
